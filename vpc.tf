@@ -1,6 +1,7 @@
 provider "aws" {
 
 }
+# just a comment to test commit
 ###################################################################
 ######                                VPC                     #####
 ###################################################################
@@ -299,33 +300,4 @@ resource "aws_autoscaling_group" "bastion_asg" {
     value               = "alexk-bastion"
     propagate_at_launch = true
   }
-
-  #target_group_arns = [aws_lb_target_group.bastion_tg.arn]
 }
-
-################################################################################################################
-#####                                      NLB                                                          ########
-################################################################################################################
-
-resource "aws_lb_target_group" "bastion_tg" {
-  name     = "alexk-bastion-tf-nlb-tg"
-  port     = 80
-  protocol = "TCP"
-  vpc_id   = aws_vpc.main.id
-}
-
-resource "aws_lb" "bastion_nlb" {
-  name               = "alexk-bastion-nlb-tf"
-  internal           = false
-  load_balancer_type = "network"
-  subnets            = [aws_subnet.public_A.id, aws_subnet.public_B.id]
-}
-
-resource "aws_autoscaling_attachment" "asg_attachment_bar" {
-  autoscaling_group_name = aws_autoscaling_group.bastion_asg.id
-  lb_target_group_arn    = aws_lb_target_group.bastion_tg.arn
-}
-
-
-
-
